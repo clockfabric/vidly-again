@@ -1,3 +1,5 @@
+This project can be reviewed at https://clockfabric.github.io/vidly-again
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
