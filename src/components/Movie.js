@@ -15,7 +15,9 @@ const Movie = props => {
 	} = props;
 	return (
 		<tr>
-			<td>{title}</td>
+			<td>
+				<a href={`/movies/${id}`}>{title}</a>
+			</td>
 			<td>{genre.name}</td>
 			<td>{stock}</td>
 			<td>{rate}</td>

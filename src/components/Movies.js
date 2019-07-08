@@ -8,12 +8,16 @@ import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../Utils/paginate";
 import { genreFilter } from "../Utils/genreFilter";
 import { sorting } from "../Utils/sorting";
+import { Link } from "react-router-dom";
+import SearchMovie from "./SearchMovie";
 
-const Movies = () => {
+const Movies = props => {
 	const allMovies = getMovies();
 	const itemsPerPage = 4;
 	const [movies, setMovies] = useState(allMovies);
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const [searchField, setSearchField] = useState("");
 
 	let genreList = getGenres();
 	genreList = [{ _id: 1, name: "All Genres" }, ...genreList];
@@ -27,12 +31,25 @@ const Movies = () => {
 		"dailyRentalRate"
 	];
 
-	const [sortDirection, setSortDirection] = useState(false);
+	const [sortDirection, setSortDirection] = useState(true);
 	const [sortCategoryIndex, setSortCategoryIndex] = useState(0);
 
 	useEffect(() => {
 		handlePageChanges(currentPage);
 	});
+
+	const handleFilterChange = e => {
+		const searchString = e.currentTarget.value;
+		setSearchField(searchString);
+
+		const newMovies = allMovies.filter(movie => {
+			return movie.title
+				.toLowerCase()
+				.startsWith(searchString.toLowerCase());
+		});
+		setCurrentPage(1);
+		setMovies(newMovies);
+	};
 
 	const handleDeleteMovie = (id, numMovieInGenre) => {
 		const moviesWithout = movies.filter(movie => {
@@ -90,6 +107,10 @@ const Movies = () => {
 			return (
 				<div>
 					<h5>{`Showing ${length} movies in the database. (Category: ${currentGenre})`}</h5>
+					<Link to='/movies/new' className='btn btn-primary mb-4'>
+						New Movie
+					</Link>
+					<br />
 					<table className='table table-striped'>
 						<MoviesTableHead
 							handleSort={handleSort}
@@ -126,7 +147,13 @@ const Movies = () => {
 							handleGenreSelection={handleGenreSelection}
 						/>
 					</div>
-					<div className='col'>{renderHeadingMessage()}</div>
+					<div className='col'>
+						<SearchMovie
+							searchField={searchField}
+							handleFilterChange={handleFilterChange}
+						/>
+						{renderHeadingMessage()}
+					</div>
 				</div>
 			</div>
 		</React.Fragment>
